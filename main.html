@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="position-absolute top-50 start-50 translate-middle">
+      <h1>==>Jokes Gratis<==</h1>
+      <button
+        type="button"
+        onclick="getJoke()"
+        class="btn btn-primary"
+        style="
+          --bs-btn-padding-y: 0.25rem;
+          --bs-btn-padding-x: 10rem;
+          --bs-btn-font-size: 1rem;
+        "
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Push Joke
+      </button>
+    </div>
+
+    <div class="modal" tabindex="-1" id="exampleModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Jokes YTTA</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h5 id="setup"></h5>
+            <h6 id="delivery"></h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function getJoke() {
+        const ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function () {
+          setTimeout(() => {
+            if (this.readyState == 4 && this.status == 200) {
+              const joke = JSON.parse(this.responseText);
+              document.getElementById("setup").textContent = `${joke.setup}`;
+              document.getElementById(
+                "delivery"
+              ).textContent = `${joke.delivery}`;
+            }
+            if (this.readyState != 4 && this.status != 200) {
+              document.getElementById(
+                "setup"
+              ).textContent = `${this.statusText}`;
+            }
+          }, 500);
+        };
+        ajax.open("GET", "https://v2.jokeapi.dev/joke/Any", true);
+        ajax.send();
+      }
+    </script>
+  </body>
+</html>
