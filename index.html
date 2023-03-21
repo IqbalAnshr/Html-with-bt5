@@ -19,14 +19,13 @@
   </head>
   <body>
     <div class="position-absolute top-50 start-50 translate-middle">
-      <h1>==>Jokes Gratis<==</h1>
       <button
         type="button"
         onclick="getJoke()"
         class="btn btn-primary"
         style="
           --bs-btn-padding-y: 0.25rem;
-          --bs-btn-padding-x: 10rem;
+          --bs-btn-padding-x: 5rem;
           --bs-btn-font-size: 1rem;
         "
         data-bs-toggle="modal"
@@ -57,26 +56,53 @@
     </div>
 
     <script>
+      // function getJoke() {
+      //   const ajax = new XMLHttpRequest();
+      //   ajax.onreadystatechange = function () {
+      //     setTimeout(() => {
+      //       if (this.readyState == 4 && this.status == 200) {
+      //         const joke = JSON.parse(this.responseText);
+      //         document.getElementById("setup").textContent = `${joke.setup}`;
+      //         document.getElementById(
+      //           "delivery"
+      //         ).textContent = `${joke.delivery}`;
+      //       }
+      //       if (this.readyState != 4 && this.status != 200) {
+      //         document.getElementById(
+      //           "setup"
+      //         ).textContent = `${this.statusText}`;
+      //       }
+      //     }, 500);
+      //   };
+      //   ajax.open("GET", "https://v2.jokeapi.dev/joke/Any", true);
+      //   ajax.send();
+      // }
+
       function getJoke() {
-        const ajax = new XMLHttpRequest();
-        ajax.onreadystatechange = function () {
-          setTimeout(() => {
-            if (this.readyState == 4 && this.status == 200) {
-              const joke = JSON.parse(this.responseText);
-              document.getElementById("setup").textContent = `${joke.setup}`;
-              document.getElementById(
-                "delivery"
-              ).textContent = `${joke.delivery}`;
-            }
-            if (this.readyState != 4 && this.status != 200) {
+        fetch("https://v2.jokeapi.dev/joke/Any")
+          .then((Response) => Response.json())
+          .then((Response) => {
+            if (Response.setup != undefined) {
               document.getElementById(
                 "setup"
-              ).textContent = `${this.statusText}`;
+              ).textContent = `${Response.setup}`;
+              document.getElementById(
+                "delivery"
+              ).textContent = `${Response.delivery}`;
+            } else {
+              document.getElementById(
+                "setup"
+              ).textContent = `API can't Connect`;
+              document.getElementById(
+                "delivery"
+              ).textContent = `Close and Try Again`;
             }
-          }, 500);
-        };
-        ajax.open("GET", "https://v2.jokeapi.dev/joke/Any", true);
-        ajax.send();
+          })
+          .catch(() => {
+            document.getElementById("setup").textContent = "Network Unstable";
+            document.getElementById("delivery").textContent =
+              "API can't Connect";
+          });
       }
     </script>
   </body>
